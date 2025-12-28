@@ -15,7 +15,16 @@
                         <span class="discount">{{product.discountPercentage}}%</span>
                     </div>
                     <div class="final-price">60</div>
-                    <button>Add to Cart</button>
+                    <form action="{% url 'add_to_cart' %}" method="POST">
+                        {% csrf_token %}
+                        <input type="hidden" name="id" value="{{product.id}}">
+                        <input type="hidden" name="title" value="{{product.title}}">
+                        <input type="hidden" name="price" value="{{product.price}}">
+                        <input type="hidden" name="discount" value="{{product.discountPercentage}}">
+                        <input type="hidden" name="thumbail" value="{{product.thumbnail}}">
+                        
+                        <button type="submit">Add to Cart</button>
+                    </form>
                 </div>
             {% endfor %}
         </div>

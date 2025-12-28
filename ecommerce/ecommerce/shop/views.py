@@ -2,6 +2,8 @@ from django.shortcuts import render, redirect
 from .forms import RegisterForm, LoginForm
 from django.contrib import messages
 from django.contrib.auth import authenticate, login as auth_login
+from django.contrib.auth.decorators import login_required
+from .models import Cart, CartItem
 import requests
 
 # Create your views here.
@@ -44,5 +46,32 @@ def login(request):
 
 	return render(request, "login.html", {'form': form})
 
+def get_user_cart(user):
+	cart, created = Cart.objects.filter(user=user)
+	return cart
+
+@login_required
+def add_to_cart(request):
+	print("add to cart")
+	print(request.POST)
+	if request.method == 'POST':
+		cart = get_user_cart(request.user)
+		item, created = CartItem.objects.get_or_create(
+			cart=cart,
+			product_id=request.POST['id'],
+			defaults={
+				'title': request.POST['title'],
+				'price': request.POST['price'],
+				'discount': request.POST['discount'],
+				'thumbnail': request.POST['thumbnail'],
+			})
+		if not created:
+			item.quantity += 1
+		item.save()
+		return render('cart')
+
+@login_required
 def cart(request):
-	return render(request, 'cart.html')
+	cart = get_user_cart(user=request.user)
+	items = cart.items.all()
+	return render(request, 'cart.html', {'items': items})
