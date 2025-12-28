@@ -47,7 +47,7 @@ def login(request):
 	return render(request, "login.html", {'form': form})
 
 def get_user_cart(user):
-	cart, created = Cart.objects.filter(user=user)
+	cart, created = Cart.objects.get_or_create(user=user)
 	return cart
 
 @login_required
@@ -61,14 +61,14 @@ def add_to_cart(request):
 			product_id=request.POST['id'],
 			defaults={
 				'title': request.POST['title'],
-				'price': request.POST['price'],
-				'discount': request.POST['discount'],
-				'thumbnail': request.POST['thumbnail'],
+				'price': float(request.POST['price']),
+				'discount': float(request.POST['discount']),
+				'thumbnail': request.POST.get('thumbnail'),
 			})
 		if not created:
 			item.quantity += 1
 		item.save()
-		return render('cart')
+		return redirect('cart')
 
 @login_required
 def cart(request):
