@@ -1,27 +1,78 @@
 {% extends 'base.html' %}
-{% block content %}
-  <!-- Container -->
-  <div class="container">
-    <div class="product-category">Your Cart</div>
-      {% for item in items%}
-      <article class="cart-item">
-        <img src="{{item.thumbnail}}" width="100">
-        <div class="item-info">
-          <h3>{{item.title}}</h3>
-          <div class="price">
-            <span class="original-price">${{item.price}}</span>
-            <span class="discount">${{item.discount}}</span>
-          </div>
-          <div class="final-price">
-            ${{item.final_price|floatformat:2 }}
-          </div>
-        </div>
-        <div class="item-actions">
-          <div class="qty-control">
-            Qty: {{item.quantity}}
-          </div>
-        </div>
-      </article>
-  </div>
+{% load static %}
 
+{% block content %}
+<div class="container">
+    <h1 class="product-category">Your Cart</h1>
+
+    {% if items %}
+    <div class="cart-page">
+
+        <!-- Cart Items List -->
+        <div class="cart-items">
+            {% for item in items %}
+            <div class="cart-item">
+                <img src="{{ item.thumbnail }}" alt="{{ item.title }}">
+                <div class="item-info">
+                    <h3>{{ item.title }}</h3>
+                    <div class="price">
+                        <span class="original-price">${{ item.price }}</span>
+                        <span class="discount">-{{ item.discount }}%</span>
+                    </div>
+                    <div class="final-price">
+                        ${{ item.final_price|floatformat:2 }}
+                    </div>
+                </div>
+                <div class="item-actions">
+                    <div class="qty-control">
+                        <form method="POST" action="{% url 'update_cart_quantity' %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="item_id" value="{{ item.id }}">
+                            <button name="action" value="decrease">-</button>
+                            <span>{{ item.quantity }}</span>
+                            <button name="action" value="increase">+</button>
+                        </form>
+                    </div>
+                    <form method="POST" action="{% url 'remove_from_cart' %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="item_id" value="{{ item.id }}">
+                        <button class="remove-btn">Remove</button>
+                    </form>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Cart Summary -->
+        <aside class="cart-summary">
+            <h3>Summary</h3>
+            <div class="summary-row">
+                <span>Subtotal</span>
+                <span>${{ subtotal|floatformat:2 }}</span>
+            </div>
+            <div class="summary-row">
+                <span>Discounts</span>
+                <span>${{ total_discount|floatformat:2 }}</span>
+            </div>
+            <div class="summary-row">
+                <span>Shipping</span>
+                <span>${{ shipping|floatformat:2 }}</span>
+            </div>
+            <div class="summary-row summary-total">
+                <span>Total</span>
+                <span>${{ total|floatformat:2 }}</span>
+            </div>
+            <button class="checkout-btn">Proceed to Checkout</button>
+        </aside>
+
+    </div>
+    {% else %}
+    <div class="empty-cart">
+        <h2>Your Cart is Empty</h2>
+        <p>Add products to your cart to view them here.</p>
+        <a href="{% url 'index' %}">Browse Products</a>
+    </div>
+    {% endif %}
+
+</div>
 {% endblock %}
