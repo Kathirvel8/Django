@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+{% block content %}
+  <!-- Container -->
+  <div class="container">
+    <div class="product-category">Your Cart</div>
+
+    <!-- If cart has items -->
+    <div class="cart-page">
+      <section class="cart-items">
+        <h2>Items</h2>
+
+        <!-- Cart item -->
+        <article class="cart-item">
+          https://via.placeholder.com/100x80
+          <div class="item-info">
+            <h3>Phone X 128GB</h3>
+            <div class="price">
+              <span class="original-price">₹59,999</span>
+              <span class="discount">-10%</span>
+            </div>
+            <div class="final-price">₹53,999</div>
+          </div>
+          <div class="item-actions">
+            <div class="qty-control">
+              <button>-</button>
+              <span>1</span>
+              <button>+</button>
+            </div>
+            <button class="remove-btn">Remove</button>
+          </div>
+        </article>
+
+        <!-- Another item -->
+        <article class="cart-item">
+          https://via.placeholder.com/100x80
+          <div class="item-info">
+            <h3>Bluetooth Mouse</h3>
+            <div class="price">
+              <span class="original-price">₹799</span>
+              <span class="discount">-0%</span>
+            </div>
+            <div class="final-price">₹799</div>
+          </div>
+          <div class="item-actions">
+            <div class="qty-control">
+              <button>-</button>
+              <span>2</span>
+              <button>+</button>
+            </div>
+            <button class="remove-btn">Remove</button>
+          </div>
+        </article>
+      </section>
+
+      <!-- Summary -->
+      <aside class="cart-summary">
+        <h3>Summary</h3>
+        <div class="summary-row">
+          <span>Subtotal</span><span>₹55,597</span>
+        </div>
+        <div class="summary-row">
+          <span>Discounts</span><span>-₹6,000</span>
+        </div>
+        <div class="summary-row">
+          <span>Shipping</span><span>₹199</span>
+        </div>
+        <div class="summary-row summary-total">
+          <span>Total</span><span>₹49,796</span>
+        </div>
+        <button class="checkout-btn">Proceed to Checkout</button>
+      </aside>
+    </div>
+
+    <!-- If cart is empty (use this block instead) -->
+    <!--
+    <div class="empty-cart">
+      <h2>Your Cart is Empty</h2>
+      <p>Add products to your cart to view them here.</p>
+      #Browse Products</a>
+    </div>
+    -->
+  </div>
+
+{% endblock %}

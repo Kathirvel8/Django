@@ -1,0 +1,14 @@
+<nav>
+    <div class="logo">
+        <h2 class="logo">shoes<span>.com</span></h2>
+    </div>
+    <div class="nav-links">
+        {% comment %} <a href="/">Home</a>
+        <a href="/login">Login</a>
+        <a href="/register">Register</a> {% endcomment %}
+            <a href="/">Home</a>
+            <a href="{% url 'login' %}">Login</a>
+            <a href="{% url 'register' %}">Register</a>
+            <a href="{% url 'cart' %}"><i class="fas fa-shopping-cart cart-icon"></i></a>
+    </div>
+</nav>

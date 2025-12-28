@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+    <div class="container">
+    <h1>Our Products</h1><br>
+    {% for category, products in all_products.items %}
+        <h2 class="product-category">{{category| capfirst}}</h2>
+        <div class="products">
+            {% for product in products%}
+                <div class="product">
+                    <img src={{product.thumbnail}} alt="Product 1">
+                    <h3>{{product.title}}</h3>
+                    <div class="price">
+                        <span class="original-price">${{product.price}}</span>
+                        <span class="discount">{{product.discountPercentage}}%</span>
+                    </div>
+                    <div class="final-price">60</div>
+                    <button>Add to Cart</button>
+                </div>
+            {% endfor %}
+        </div>
+    {% endfor %}
+    <div class="container">
+
+    </div>
+</div>
+<script>
+    function calculateFinalPrice(price, discount) {
+        const discountAmount = price * (discount / 100);
+        const finalPrice = price - discountAmount;
+        return finalPrice;
+    }
+
+    const products = document.querySelectorAll('.product');
+    products.forEach(product => {
+        const priceElement = product.querySelector('.original-price');
+        const discountElement = product.querySelector('.discount');
+        const finalPriceElement = product.querySelector('.final-price');
+        
+        const price = parseFloat(priceElement.textContent.replace('$', ''));
+        const discount = parseFloat(discountElement.textContent);
+        
+        const finalPrice = calculateFinalPrice(price, discount);
+        finalPriceElement.textContent = "$" + finalPrice.toFixed(2);
+    });
+</script>
+
+{% endblock %}
