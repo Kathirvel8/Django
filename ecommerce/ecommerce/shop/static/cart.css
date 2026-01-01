@@ -4,33 +4,29 @@
     padding: 20px;
 }
 
-.cart-body .cart-head{
+/* Heading */
+.cart-body .cart-head {
     text-align: center;
     font-size: 40px;
     letter-spacing: 6px;
     font-weight: 600;
 }
 
-.cart-body .cart-layout{
+/* Layout */
+.cart-body .cart-layout {
     margin-top: 40px;
     display: flex;
     gap: 20px;
     align-items: flex-start;
 }
 
-.cart-body .cart-container {
-    width: 75%;
-    margin: 0 10px;
-    background-color: white;
-    padding: 10px;
-    border-radius: 15px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-}
-
+/* Table */
 .cart-body .cart-table {
-    width: 100%;
+    width: 75%;
+    background: #fff;
     border-collapse: collapse;
-    margin-bottom: 20px;
+    border-radius: 15px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
 }
 
 .cart-body .cart-table th,
@@ -44,13 +40,14 @@
     background-color: #f1f1f1;
 }
 
+/* Product */
 .cart-body .product-cell img {
     width: 120px;
     height: 120px;
     object-fit: cover;
     display: block;
+    margin: auto;
     padding-top: 10px;
-    margin: 0 auto 6px;
 }
 
 .cart-body .product-name {
@@ -59,6 +56,7 @@
     padding: 10px 0;
 }
 
+/* Quantity */
 .cart-body .qty-control {
     display: flex;
     align-items: center;
@@ -77,23 +75,23 @@
 .cart-body .qty-btn {
     width: 32px;
     height: 32px;
-    border: none;
     background-color: #f0f0f0;
-    font-size: 18px;
-    cursor: pointer;
     border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #000;
 }
 
 .cart-body .qty-btn:hover {
     background-color: #ddd;
 }
 
+/* Remove */
 .cart-body .remove-btn {
     background-color: #ff4d4d;
-    color: white;
+    color: #fff;
     padding: 5px 10px;
-    border: none;
-    cursor: pointer;
     border-radius: 5px;
 }
 
@@ -101,6 +99,7 @@
     background-color: #ff1a1a;
 }
 
+/* Price Summary */
 .cart-body .price-summary {
     width: 30%;
     background: #fff;
@@ -114,7 +113,6 @@
     display: flex;
     justify-content: space-between;
     margin-bottom: 10px;
-    font-size: 15px;
 }
 
 .cart-body .summary-row.total {
@@ -122,13 +120,13 @@
     font-weight: bold;
 }
 
+/* Checkout */
 .cart-body .checkout-btn {
     width: 100%;
     margin-top: 15px;
     padding: 10px;
     background: #4CAF50;
     color: #fff;
-    border: none;
     border-radius: 5px;
 }
 
