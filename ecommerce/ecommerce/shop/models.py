@@ -12,7 +12,7 @@ class Cart(models.Model):
 class CartItem(models.Model):
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name="items")
     product_id = models.CharField(max_length=20)
-    title = models.CharField(max_length=20)
+    title = models.CharField(max_length=100)
     price = models.FloatField()
     discount = models.FloatField()
     thumbnail = models.URLField()

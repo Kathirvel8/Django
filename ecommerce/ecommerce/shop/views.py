@@ -52,8 +52,6 @@ def get_user_cart(user):
 
 @login_required
 def add_to_cart(request):
-	print("add to cart")
-	print(request.POST)
 	if request.method == 'POST':
 		cart = get_user_cart(request.user)
 		item, created = CartItem.objects.get_or_create(
@@ -71,7 +69,32 @@ def add_to_cart(request):
 		return redirect('cart')
 
 @login_required
-def cart(request):
+def cart(request, quantity=0, tax=0, price=0):
+	total_item_price = 0
 	cart = get_user_cart(user=request.user)
 	items = cart.items.all()
-	return render(request, 'cart.html', {'items': items})
+	for item in items:
+		price += (item.price * item.quantity)
+		quantity += item.quantity
+	total_item_price = quantity * price
+	tax = 0.05 * price
+	total_price = tax + price
+	return render(request, 'cart.html', {'items': items, 'quantity': quantity, 'price': price, 'tax': tax, 'total_price': total_price, 'total_item_price': total_item_price})
+
+def remove_cart(request, item_id):
+	cart = get_user_cart(request.user)
+	item = CartItem.objects.get(cart=cart, id=item_id)
+	if item.quantity > 1:
+		item.quantity -= 1
+		item.save()
+	else:
+		item.delete()
+	return redirect('cart')
+
+def add_cart_item(request, item_id):
+	cart = get_user_cart(request.user)
+	item = CartItem.objects.get(cart=cart, id=item_id)
+	if item.quantity >=1:
+		item.quantity += 1
+		item.save()
+	return redirect('cart')

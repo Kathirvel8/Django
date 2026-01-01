@@ -1,27 +1,90 @@
 {% extends 'base.html' %}
+
+{% load static %}
+<!-- {% block css %}
+<link rel="stylesheet" href="{% static 'cart.css' %}">
+{% endblock %} -->
 {% block content %}
-  <!-- Container -->
-  <div class="container">
-    <div class="product-category">Your Cart</div>
-      {% for item in items%}
-      <article class="cart-item">
-        <img src="{{item.thumbnail}}" width="100">
-        <div class="item-info">
-          <h3>{{item.title}}</h3>
-          <div class="price">
-            <span class="original-price">${{item.price}}</span>
-            <span class="discount">${{item.discount}}</span>
-          </div>
-          <div class="final-price">
-            ${{item.final_price|floatformat:2 }}
-          </div>
+<div class="cart-body">
+    <div class="container">
+
+    {% if not items %}
+        <h2 class="text-center">Your Shopping Cart is Empty</h2>
+        <br>
+        <div class="text-center">
+            <a href="{% url 'index' %}" class="btn btn-primary">Continue Shopping</a>
         </div>
-        <div class="item-actions">
-          <div class="qty-control">
-            Qty: {{item.quantity}}
-          </div>
+    {% else %}
+
+        <h1 class="cart-head">Your Cart</h1>
+
+        <div class="cart-layout">
+
+        <div class="cart-container">
+            <table class="cart-table">
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Price</th>
+                        <th>Qty</th>
+                        <th>Total</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                {% for item in items %}
+                <tr>
+                    <td class="product-cell">
+                            <img src="{{item.thumbnail}}">
+                            <p class="product-name">{{item.title}}</p>
+                        </td>
+                    <td> 
+                    <td>${{ item.price|floatformat:2 }}</td>
+                    <td>
+                        <div class="qty-control">
+                            <a href="{% url 'remove_cart' item.id %}" class="qty-btn" type="button"> <i class="fa fa-minus"></i> </a>
+                            <input type="number" value="{{item.quantity}}" min="1">
+                            <a href="{% url 'add_cart_item' item.id %}" class="qty-btn" type="button"> <i class="fa fa-plus"></i> </a>
+                        </div>
+                    </td>
+                    <td>${{item.total_item_price}}</td>
+                    <td><button class="remove-btn">Remove</button></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+            </table>
+            <div class="cart-summary">
+                <p><strong>Total: $59.97</strong></p>
+            </div>
         </div>
-      </article>
-  </div>
+            <div class="price-summary">
+            <h3>Price Details</h3>
+
+            <div class="summary-row">
+                <span>Subtotal</span>
+                <span>$20.00</span>
+            </div>
+
+            <div class="summary-row">
+                <span>Tax (5%)</span>
+                <span>$2.00</span>
+            </div>
+
+            <hr>
+
+            <div class="summary-row total">
+                <span>Total Amount</span>
+                <span>$22.00</span>
+            </div>
+
+            <img src="{% static './images/payments.png' %}" height="26">
+
+            <button class="checkout-btn">Checkout</button>
+        </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
 
 {% endblock %}
