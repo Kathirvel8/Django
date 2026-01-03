@@ -65,6 +65,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'shop.context_processor.get_cart_count'
             ],
         },
     },
@@ -131,3 +132,9 @@ STATICFILES_DIRS = [
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+LOGIN_URL = "/login"
+
+PAYPAL_CLIENT_ID = "Aa5WUCm83mYwcliBjB22y5XGVXiMPzdsUjas1ZyYBX1sbrj6BcqEN7H_A3rt4oGxb7XPkPjg5_N8Sbke"
+PAYPAL_CLIENT_SECRET = "ENy-Siy5yeehuGJZ-Ku2u99ErSQwzrJ7l0aiVS_kCuDjM02TaHh-0Id_ri6Zv5DfPxPpOZywjU3SDgNh"
+PAYPAL_MODE = 'sandbox'

@@ -13,13 +13,13 @@
             {% for product in products%}
                 <div class="product">
                     <img src={{product.thumbnail}} alt="Product 1">
-                    <h3>{{product.title}}</h3>
+                    <h4>{{product.title}}</h4>
                     <div class="price">
                         <span class="original-price">${{product.price}}</span>
                         <span class="discount">{{product.discountPercentage}}%</span>
                     </div>
                     <div class="final-price">60</div>
-                    <form action="{% url 'add_to_cart' %}" method="POST">
+                    <form action="{% url 'add_to_cart' product.id %}" method="POST">
                         {% csrf_token %}
                         <input type="hidden" name="id" value="{{product.id}}">
                         <input type="hidden" name="title" value="{{product.title}}">
@@ -27,7 +27,10 @@
                         <input type="hidden" name="discount" value="{{product.discountPercentage}}">
                         <input type="hidden" name="thumbnail" value="{{ product.thumbnail }}">
                         
-                        <button type="submit">Add to Cart</button>
+                        <button type="submit" id="cart-btn">Add to Cart</button>
+                        {% if added_item_id == product.id %}
+                            <p class="cart-text" style="color: green; padding-top: 10px;">Item added to cart</p>
+                        {% endif%}
                     </form>
                 </div>
             {% endfor %}
@@ -39,6 +42,7 @@
 </div>
 </div>
 <script>
+    
     function calculateFinalPrice(price, discount) {
         const discountAmount = price * (discount / 100);
         const finalPrice = price - discountAmount;

@@ -1,3 +1,7 @@
+:root{
+    --danger: #d93025;
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -5,7 +9,7 @@
     font-family: Arial, sans-serif;
 }
 
-.index-body {
+html, body {
     height: 100%;
     margin: 0;
     padding: 0;
@@ -13,11 +17,10 @@
     flex-direction: column;
 }
 
-.index-body {
+body {
     background: #f1cd92;
 }
 
-/* Navbar */
 nav {
     background: #222;
     padding: 15px 20px;
@@ -25,6 +28,11 @@ nav {
     align-items: center;
     justify-content: space-between;
     height: 70px;
+}
+.nav-links span{
+    font-size: 20px;
+    font-weight: 100;
+    padding-left: 7px;
 }
 
 .container{
@@ -72,16 +80,36 @@ nav a:hover {
     color: #f39c12;
 }
 
+
+.error-banner {
+      border: 1px solid var(--danger);
+      background: #ffe8e6;
+      color: var(--danger);
+      padding: .75rem;
+      border-radius: 6px;
+      margin-bottom: 1rem;
+}
+.error-text {
+    color: var(--danger);
+    font-size: .9rem;
+    margin-top: .35rem;
+}
+.error-input {
+    border-color: var(--danger);
+    box-shadow: 0 0 0 3px rgba(217, 48, 37, 0.12);
+}
+
+
 /* Container */
-/* .container {
+.container {
     width: 90%;
     margin: auto;
     padding: 20px;
-} */
+}
 
 .product-category{
-    font-size: 40px;
-    font-weight: 1000;
+    font-size: 30px;
+    font-weight: 700;
     margin: 20px 0px;
 
 }
@@ -105,12 +133,14 @@ nav a:hover {
 }
 
 .product img {
-    width: 100%;
+    display: block;
+    margin: 0 auto;
+    width: 60%;
     height: 200px;
     object-fit: cover;
 }
 
-.product h3 {
+.product h4 {
     margin: 10px 0;
     flex-grow: 1;
 }
@@ -144,6 +174,11 @@ nav a:hover {
     margin-bottom: 10px;
 }
 
+.cart-text{
+    color: green;
+    margin-top: 5px;
+}
+
 
 .product button {
     padding: 10px 20px;
@@ -164,11 +199,12 @@ nav a:hover {
 /* Forms */
 .login-form-box {
     max-width: 800px;
-    height: 350px;
+    height: 52%;
     background: white;
     padding: 20px;
     margin: 50px auto;
-    border-radius: 5px;
+    border-radius: 15px;
+    
 }
 
 .register-form-box {
@@ -177,7 +213,7 @@ nav a:hover {
     background: white;
     padding: 20px;
     margin: 50px auto;
-    border-radius: 5px;
+    border-radius: 15px;
 }
 
 .register-form-box h2, .login-form-box h2 {
@@ -190,6 +226,8 @@ nav a:hover {
     padding: 15px;
     margin-bottom: 30px;
     font-size: 15px;
+    border-radius: 10px;
+    border: 2px solid #6e6969;
 }
 
 .register-form-box button, .login-form-box button {
@@ -202,7 +240,7 @@ nav a:hover {
     cursor: pointer;
     font-size: 15px;
     transition: all 0.3s ease;
-
+    border-radius: 10px;
 }
 
 .register-form-box button:hover, .login-form-box button:hover {
@@ -214,7 +252,7 @@ nav a:hover {
     color: white;
     padding: 5px 0;
     text-align: center;
-    margin-top: 50px;
+    margin-top: auto;
 }
 
 .footer-logo {
@@ -247,3 +285,4 @@ nav a:hover {
     font-size: 14px;
     color: #ccc;
 }
+

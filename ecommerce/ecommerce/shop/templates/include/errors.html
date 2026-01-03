@@ -1,4 +1,4 @@
-<div class="d-flex flex-column">
+<div class="error-banner" role="alert" aria-live="polite">
     {% if messages %}
         {% for message in messages %}
             <div class="alert {% if message.tags == 'success' %} alert-success {% else %} alert-danger {% endif %}" role="alert">
@@ -7,8 +7,8 @@
         {% endfor %}
     {% endif %}
     {% for error  in form.non_field_errors %}
-        <div class="alert alert-danger">
-            <span class="text-danger">{{ error }}</span>
+        <div class="error-item">
+            <span class="error-text">{{ error }}</span>
         </div>
     {% endfor %}
     {% for field in form %}
@@ -16,7 +16,7 @@
             <div class="alert alert-danger">
                 <span class="fw-bold">{{ field.label_tag }}</span>
                 {% for error in field.errors %}
-                <span class="text-danger">{{ error }}</span>
+                <span class="error-text">{{ error }}</span>
                 {% endfor %}
             </div>
         {% endif %}

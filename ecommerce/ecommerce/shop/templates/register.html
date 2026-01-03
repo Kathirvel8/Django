@@ -4,12 +4,14 @@
     <div class="register-form-box">
         <h2>Register</h2>
         <form method="post" action="">
-            {% csrf_token %}
-            {% if form.errors %}
-                <div class="form-errors">
-                    {{ form.errors }}
-                </div>
+            {% if form.non_field_errors %}
+            <div class="error-banner" role="alert" aria-live="polite">
+                {% for err in form.non_field_errors %}
+                <div class="error-text">{{ err }}</div>
+                {% endfor %}
+            </div>
             {% endif %}
+            {% csrf_token %}
             <input type="text" placeholder="Full Name" required>
             <input type="email" placeholder="Email" required>
             <input type="password" placeholder="Password" required>

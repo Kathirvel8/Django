@@ -1,15 +1,22 @@
 from django.shortcuts import render, redirect
 from .forms import RegisterForm, LoginForm
 from django.contrib import messages
-from django.contrib.auth import authenticate, login as auth_login
+from django.contrib.auth import authenticate, login as auth_login, logout
 from django.contrib.auth.decorators import login_required
-from .models import Cart, CartItem
+from django.forms.models import model_to_dict
+from .models import Cart, CartItem, Orders
+from django.conf import settings
 import requests
+import paypalrestsdk
 
 # Create your views here.
+paypalrestsdk.configure({
+	"mode":settings.PAYPAL_MODE, 
+    "client_id": settings.PAYPAL_CLIENT_ID, 
+	"client_secret": settings.PAYPAL_CLIENT_SECRET
+	})
 
-def index(request):
-	categories = ['mens-shoes', 'womens-shoes']
+def get_products(categories):
 	all_products = {}
 	for category in categories:
 		url = f"https://dummyjson.com/products/category/{category}"
@@ -17,7 +24,15 @@ def index(request):
 		data = response.json()
 
 		all_products[category] = data["products"]
-	return render(request, 'index.html', {"all_products": all_products})
+	return all_products
+
+def index(request):
+	added_item_id = request.session.pop("added_item_id", None)
+	print("id", added_item_id)
+	categories = ['mens-shoes', 'womens-shoes']
+	all_products = get_products(categories)
+	show_text = True
+	return render(request, 'index.html', {"all_products": all_products, 'show_text': show_text, "added_item_id": added_item_id})
 
 def register(request):
 	form = RegisterForm()
@@ -41,17 +56,19 @@ def login(request):
 			user = authenticate(username=username, password=password)
 			if user is not None:
 				auth_login(request, user)
-				print("success")
 				return redirect("index")
 
 	return render(request, "login.html", {'form': form})
 
+def logout_user(request):
+	logout(request)
+	return redirect('index')
 def get_user_cart(user):
 	cart, created = Cart.objects.get_or_create(user=user)
 	return cart
 
 @login_required
-def add_to_cart(request):
+def add_to_cart(request, item_id):
 	if request.method == 'POST':
 		cart = get_user_cart(request.user)
 		item, created = CartItem.objects.get_or_create(
@@ -66,20 +83,32 @@ def add_to_cart(request):
 		if not created:
 			item.quantity += 1
 		item.save()
-		return redirect('cart')
+		request.session["added_item_id"] = item_id
+		print(request.session["added_item_id"] )
+		return redirect('index')
 
 @login_required
 def cart(request, quantity=0, tax=0, price=0):
-	total_item_price = 0
 	cart = get_user_cart(user=request.user)
 	items = cart.items.all()
+	
 	for item in items:
-		price += (item.price * item.quantity)
+		item.total_item_price = round(item.price * item.quantity, 2)
+		item.added_product_id = item.product_id
+		price += item.total_item_price
 		quantity += item.quantity
-	total_item_price = quantity * price
-	tax = 0.05 * price
-	total_price = tax + price
-	return render(request, 'cart.html', {'items': items, 'quantity': quantity, 'price': price, 'tax': tax, 'total_price': total_price, 'total_item_price': total_item_price})
+	ids = [int(item.added_product_id) for item in items]
+	tax = round(0.05 * price, 2)
+	total_price = round(tax + price, 2)
+	categories = ['mens-shoes']
+	products = get_products(categories)
+
+	user_cart = Cart.objects.get(user_id=request.user.id)
+	print("total",user_cart.total_amount)
+	user_cart.total_amount = total_price
+	user_cart.save()
+	
+	return render(request, 'cart.html', {'items': items, 'quantity': quantity, 'subtotal': price, 'tax': tax, 'total': total_price, "all_products": products, "ids": ids})
 
 def remove_cart(request, item_id):
 	cart = get_user_cart(request.user)
@@ -98,3 +127,56 @@ def add_cart_item(request, item_id):
 		item.quantity += 1
 		item.save()
 	return redirect('cart')
+
+def remove_cart_item(request, item_id):
+	cart = get_user_cart(request.user)
+	item = CartItem.objects.get(cart=cart, id=item_id)
+	if request.user.is_authenticated:
+		item.delete()
+	return redirect('cart')
+
+def checkout(request):
+	cart = Cart.objects.get(user_id=request.user.id)
+	total_price = cart.total_amount
+	order = Orders.objects.create(user_id_id=request.user.id, total_amount=total_price)
+
+	payment = paypalrestsdk.Payment({
+		"intent": "sale",
+		"payer": {
+			'payment_method': 'paypal'
+		},
+		"redirect_urls": {
+			"return_url": request.build_absolute_uri("/payment_success"),
+			"cancel_url": request.build_absolute_uri("/cart"),
+    	},
+		"transactions": [{
+			"amount":{ 
+				"total_price": str(total_price),
+				"currency": "USD"
+			},
+		}]
+	})
+	if payment.create():
+		print("success")
+		order.payment_id = payment.id
+		order.save()
+
+		for link in payment.links:
+			if link.method == "approval_url":
+				return redirect(link.href)
+			
+	return render(request, "error.html", {"error": payment.error})
+
+def payment_success(request):
+	payment_id = request.GET.get('payment_id')
+	payer_id = request.GET.get("payer_id")
+
+	order = Orders.objects.get(payment_id=payment_id)
+	payment = paypalrestsdk.Payment.find(payment_id)
+
+	if payment.execute({"payer_id": payer_id}):
+		order.is_paid = True
+		order.save()
+
+		return render(request, 'success.html')
+	return render(request, "error.html")
