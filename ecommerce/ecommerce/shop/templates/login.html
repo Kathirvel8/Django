@@ -14,11 +14,7 @@
             {% endif %}
 
             {% csrf_token %}
-            {% comment %} {% if form.errors %}
-                <div class="form-errors">
-                    {{ form.errors }}
-                </div>
-            {% endif %} {% endcomment %}
+                <input type="hidden" name="next" value="{{ request.GET.next }}">
             <input type="text" name="username" placeholder="Username" required>
             <input type="password" name="password" placeholder="Password" required>
             <button type="submit">Login</button>

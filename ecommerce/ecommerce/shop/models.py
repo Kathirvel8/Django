@@ -26,7 +26,7 @@ class Orders(models.Model):
 
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
     total_amount = models.DecimalField(default=0.0, decimal_places=2, max_digits=20)
-    payment_id = models.CharField(max_length=100, blank=True, null=True)
+    payment_id = models.CharField(max_length=100, blank=True, null=True, unique=True)
     is_paid = models.BooleanField(default=False)
     paid_at = models.DateTimeField(auto_now_add=True)
     

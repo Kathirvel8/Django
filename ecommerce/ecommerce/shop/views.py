@@ -28,7 +28,6 @@ def get_products(categories):
 
 def index(request):
 	added_item_id = request.session.pop("added_item_id", None)
-	print("id", added_item_id)
 	categories = ['mens-shoes', 'womens-shoes']
 	all_products = get_products(categories)
 	show_text = True
@@ -47,6 +46,8 @@ def register(request):
 	return render(request, 'register.html', {'form': form})
 
 def login(request):
+	print("get", request.GET.get('next'))
+	print("post", request.POST.get('next'))
 	form = LoginForm()
 	if request.method == 'POST':
 		form = LoginForm(request.POST)
@@ -56,13 +57,19 @@ def login(request):
 			user = authenticate(username=username, password=password)
 			if user is not None:
 				auth_login(request, user)
-				return redirect("index")
+				next_url = request.GET.get('next') or request.POST.get('next')
+				print("next_url", next_url)
+				if next_url:
+					return redirect(next_url)
+				else:
+					return redirect("index")
 
 	return render(request, "login.html", {'form': form})
 
 def logout_user(request):
 	logout(request)
 	return redirect('index')
+
 def get_user_cart(user):
 	cart, created = Cart.objects.get_or_create(user=user)
 	return cart
@@ -84,8 +91,7 @@ def add_to_cart(request, item_id):
 			item.quantity += 1
 		item.save()
 		request.session["added_item_id"] = item_id
-		print(request.session["added_item_id"] )
-		return redirect('index')
+		return redirect(request.META.get('HTTP_REFERER', 'index'))
 
 @login_required
 def cart(request, quantity=0, tax=0, price=0):
@@ -104,7 +110,6 @@ def cart(request, quantity=0, tax=0, price=0):
 	products = get_products(categories)
 
 	user_cart = Cart.objects.get(user_id=request.user.id)
-	print("total",user_cart.total_amount)
 	user_cart.total_amount = total_price
 	user_cart.save()
 	
@@ -138,7 +143,6 @@ def remove_cart_item(request, item_id):
 def checkout(request):
 	cart = Cart.objects.get(user_id=request.user.id)
 	total_price = cart.total_amount
-	order = Orders.objects.create(user_id_id=request.user.id, total_amount=total_price)
 
 	payment = paypalrestsdk.Payment({
 		"intent": "sale",
@@ -151,27 +155,28 @@ def checkout(request):
     	},
 		"transactions": [{
 			"amount":{ 
-				"total_price": str(total_price),
+				"total": str(total_price),
 				"currency": "USD"
 			},
 		}]
 	})
 	if payment.create():
+		order = Orders.objects.create(user_id=request.user, total_amount=total_price, payment_id=payment.id)
 		print("success")
-		order.payment_id = payment.id
 		order.save()
 
 		for link in payment.links:
-			if link.method == "approval_url":
+			if link.rel == "approval_url":
 				return redirect(link.href)
 			
 	return render(request, "error.html", {"error": payment.error})
 
 def payment_success(request):
-	payment_id = request.GET.get('payment_id')
-	payer_id = request.GET.get("payer_id")
+	payment_id = request.GET.get('paymentId')
+	payer_id = request.GET.get("payerId")
 
-	order = Orders.objects.get(payment_id=payment_id)
+	order = Orders.objects.filter(payment_id=payment_id)
+	order = order.first()
 	payment = paypalrestsdk.Payment.find(payment_id)
 
 	if payment.execute({"payer_id": payer_id}):
@@ -179,4 +184,4 @@ def payment_success(request):
 		order.save()
 
 		return render(request, 'success.html')
-	return render(request, "error.html")
+	return render(request, "error.html", {'error': payment.error})
