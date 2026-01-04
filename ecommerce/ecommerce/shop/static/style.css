@@ -285,4 +285,19 @@ nav a:hover {
     font-size: 14px;
     color: #ccc;
 }
+.payment-success-body .payment-success-container{
+    display: flex;
+    justify-content:center;
+    align-items: center;
+    background-color: white;
+}
+.payment-success-body .payment-success{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    
+}
 
+.payment-success-body #success-icon{
+    font-size: 100px;
+}

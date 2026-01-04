@@ -173,11 +173,13 @@ def checkout(request):
 
 def payment_success(request):
 	payment_id = request.GET.get('paymentId')
-	payer_id = request.GET.get("payerId")
+	payer_id = request.GET.get("PayerID")
 
-	order = Orders.objects.filter(payment_id=payment_id)
-	order = order.first()
+	order = Orders.objects.filter(payment_id=payment_id).first()
 	payment = paypalrestsdk.Payment.find(payment_id)
+
+	if not payer_id:
+		return render(request, "error.html", {'error': 'Missing PayerID in PayPal response'})
 
 	if payment.execute({"payer_id": payer_id}):
 		order.is_paid = True
