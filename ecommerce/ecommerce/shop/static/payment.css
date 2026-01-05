@@ -1,0 +1,36 @@
+.payment-success-body .payment-success-container{
+    display: flex;
+    justify-content:center;
+    align-items: center;
+    background-color: white;
+    height: 100vh;
+    width: 100vw;
+}
+
+.payment-success-body .payment-success{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.payment-success-body #success-icon{
+    font-size: 150px;
+    color: rgb(70, 175, 70);
+    text-align: center;
+    padding-left: 110px;
+}
+
+.payment-success-body .success-text{
+    text-align: center;
+    margin-top: 20px;
+    margin-bottom: 10px;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.payment-success-body a{
+    text-align: center;
+    text-decoration: none;
+    padding-left: 100px;
+}

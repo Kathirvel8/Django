@@ -11,9 +11,13 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
+from dotenv import load_dotenv
+import os 
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+load_dotenv(BASE_DIR / 'credentials.env')
 
 
 # Quick-start development settings - unsuitable for production
@@ -80,11 +84,11 @@ WSGI_APPLICATION = 'ecommerce.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'shop',
-        'USER': 'root',
-        'PASSWORD': '',
-        'HOST': '127.0.0.1',
-        'PORT': '3306'
+        'NAME': os.environ.get('NAME', 'shop'),
+        'USER': os.environ.get('USER', 'root'),
+        'PASSWORD': os.environ.get('PASSWORD', ''),
+        'HOST': os.environ.get('HOST', '127.0.0.1'),
+        'PORT': os.environ.get('PORT', '3306')
     }
 }
 
@@ -135,6 +139,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_URL = "/login"
 
-PAYPAL_CLIENT_ID = "Aa5WUCm83mYwcliBjB22y5XGVXiMPzdsUjas1ZyYBX1sbrj6BcqEN7H_A3rt4oGxb7XPkPjg5_N8Sbke"
-PAYPAL_CLIENT_SECRET = "ENy-Siy5yeehuGJZ-Ku2u99ErSQwzrJ7l0aiVS_kCuDjM02TaHh-0Id_ri6Zv5DfPxPpOZywjU3SDgNh"
+PAYPAL_CLIENT_ID = os.environ.get('PAYPAL_CLIENT_ID')
+PAYPAL_CLIENT_SECRET = os.environ.get('PAYPAL_CLIENT_SECRET')
 PAYPAL_MODE = 'sandbox'

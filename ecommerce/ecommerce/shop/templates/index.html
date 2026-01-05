@@ -18,7 +18,7 @@
                         <span class="original-price">${{product.price}}</span>
                         <span class="discount">{{product.discountPercentage}}%</span>
                     </div>
-                    <div class="final-price">60</div>
+                    <div class="final-price"></div>
                     <form action="{% url 'add_to_cart' product.id %}" method="POST">
                         {% csrf_token %}
                         <input type="hidden" name="id" value="{{product.id}}">
@@ -42,7 +42,6 @@
 </div>
 </div>
 <script>
-    
     function calculateFinalPrice(price, discount) {
         const discountAmount = price * (discount / 100);
         const finalPrice = price - discountAmount;

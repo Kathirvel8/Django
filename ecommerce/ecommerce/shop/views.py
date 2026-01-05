@@ -91,7 +91,7 @@ def add_to_cart(request, item_id):
 			item.quantity += 1
 		item.save()
 		request.session["added_item_id"] = item_id
-		return redirect(request.META.get('HTTP_REFERER', 'index'))
+	return redirect(request.META.get('HTTP_REFERER', 'index'))
 
 @login_required
 def cart(request, quantity=0, tax=0, price=0):
@@ -177,6 +177,10 @@ def payment_success(request):
 
 	order = Orders.objects.filter(payment_id=payment_id).first()
 	payment = paypalrestsdk.Payment.find(payment_id)
+	cart = Cart.objects.get(user=request.user)
+	cart.items.all().delete()
+	cart.total_amount = 0
+	cart.save()
 
 	if not payer_id:
 		return render(request, "error.html", {'error': 'Missing PayerID in PayPal response'})

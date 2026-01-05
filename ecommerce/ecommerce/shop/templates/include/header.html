@@ -4,7 +4,7 @@
     </div>
     {% if user.is_authenticated %}
     <div class="logo">
-        <h2 class="logo">Welcome {{user.username}}</h2>
+        <h2 class="logo">Welcome, <span>{{user.username | capfirst}}<span></h2>
     </div>
     {% endif %}
     <div class="nav-links">

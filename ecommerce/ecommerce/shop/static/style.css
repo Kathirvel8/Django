@@ -124,7 +124,7 @@ nav a:hover {
 
 .product {
     background: white;
-    padding: 15px;
+    padding-bottom: 15px;
     border-radius: 5px;
     text-align: center;
     display: flex;
@@ -136,7 +136,7 @@ nav a:hover {
     display: block;
     margin: 0 auto;
     width: 60%;
-    height: 200px;
+    height: 150px;
     object-fit: cover;
 }
 
@@ -284,20 +284,4 @@ nav a:hover {
 .footer p {
     font-size: 14px;
     color: #ccc;
-}
-.payment-success-body .payment-success-container{
-    display: flex;
-    justify-content:center;
-    align-items: center;
-    background-color: white;
-}
-.payment-success-body .payment-success{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    
-}
-
-.payment-success-body #success-icon{
-    font-size: 100px;
 }
