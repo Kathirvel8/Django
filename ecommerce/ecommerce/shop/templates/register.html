@@ -3,19 +3,15 @@
 <div class="container">
     <div class="register-form-box">
         <h2>Register</h2>
+        <div class="">
+            {% include 'include/errors.html' %}
+        </div>
         <form method="post" action="">
-            {% if form.non_field_errors %}
-            <div class="error-banner" role="alert" aria-live="polite">
-                {% for err in form.non_field_errors %}
-                <div class="error-text">{{ err }}</div>
-                {% endfor %}
-            </div>
-            {% endif %}
             {% csrf_token %}
-            <input type="text" placeholder="Full Name" required>
-            <input type="email" placeholder="Email" required>
-            <input type="password" placeholder="Password" required>
-            <input type="password" placeholder="Confirm Password" required>
+            <input type="text" name="Username" placeholder="Full Name" required>
+            <input type="email" name="Email" placeholder="Email" required>
+            <input type="password" name="Password" placeholder="Password" required>
+            <input type="password" name="ConfirmPassword" placeholder="Confirm Password" required>
             <button type="submit">Register</button>
         </form>
     </div>

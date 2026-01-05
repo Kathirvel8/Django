@@ -1,3 +1,4 @@
+{% if messages or form.non_field_errors or form.errors %}
 <div class="error-banner" role="alert" aria-live="polite">
     {% if messages %}
         {% for message in messages %}
@@ -22,3 +23,4 @@
         {% endif %}
     {% endfor %}
 </div>
+{% endif %}

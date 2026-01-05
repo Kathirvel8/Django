@@ -4,9 +4,9 @@ from django.contrib.auth import authenticate
 
 class RegisterForm(forms.ModelForm):
     username = forms.CharField(max_length=50, label="Username", required=True)
-    email = forms.CharField(max_length=50, label="Email", required=True)
-    password = forms.CharField(max_length=50, label="Password", required=True)
-    confirm_password = forms.CharField(max_length=50, label="Confirm Password", required=True)
+    email = forms.EmailField(max_length=50, label="Email", required=True)
+    password = forms.CharField(max_length=50, label="Password", required=True, widget=forms.PasswordInput)
+    confirm_password = forms.CharField(max_length=50, label="ConfirmPassword", required=True, widget=forms.PasswordInput)
 
     class Meta():
         model = User
@@ -22,7 +22,7 @@ class RegisterForm(forms.ModelForm):
         
 class LoginForm(forms.Form):
     username = forms.CharField(max_length=20, label="Username", required=True)
-    password = forms.CharField(max_length=20, label="Password", required=True)
+    password = forms.CharField(max_length=20, label="Password", required=True, widget=forms.PasswordInput)
 
     def clean(self):
         cleaned_data = super().clean()

@@ -37,10 +37,14 @@ def register(request):
 	form = RegisterForm()
 	if request.method == 'POST':
 		form = RegisterForm(request.POST)
+		print("form is_valid:", form.is_valid())
+		if not form.is_valid():
+			print("form errors:", form.errors)
 		if form.is_valid():
 			user = form.save(commit=False)
 			user.set_password(form.cleaned_data['password'])
 			user.save()
+			print("success")
 			messages.success(request, message="Registration successful")
 			return redirect("/login")
 	return render(request, 'register.html', {'form': form})
